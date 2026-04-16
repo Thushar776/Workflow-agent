@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+openai
+pandas
+python-dotenv
+pydantic
+python-multipart
+sqlalchemy
+python-jose[cryptography]
+passlib[bcrypt]
+bcrypt==4.0.1
+structlog

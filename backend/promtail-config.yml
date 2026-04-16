@@ -1,0 +1,33 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+- job_name: 'workflow-agent'
+  static_configs:
+  - targets:
+      - localhost
+    labels:
+      job: 'fastapi-backend'
+      __path__: /var/log/app.log
+
+  pipeline_stages:
+  - json:
+      expressions:
+        level: level
+        event: event
+        trace_id: trace_id
+        duration_ms: duration_ms
+        user: user
+  - labels:
+      level:
+      event:
+  - timestamp:
+      source: timestamp
+      format: RFC3339Nano
