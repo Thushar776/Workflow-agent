@@ -50,9 +50,9 @@ export default function LoginPage({ onSwitch }) {
     <div className="auth-page">
       <div className="auth-container animate-fade-up">
         <div className="auth-header">
-          <div className="auth-logo">W</div>
-          <h1>{mfaRequired ? 'Enter OTP' : 'Workflow Agent'}</h1>
-          <p>{mfaRequired ? 'Check your email for the 6-digit code' : 'Sign in to your workspace'}</p>
+          <div className="auth-logo">F</div>
+          <h1>{mfaRequired ? 'Enter OTP' : 'FlowMind'}</h1>
+          <p>{mfaRequired ? 'Check your email for the 6-digit code' : 'The intelligent way to automate workflows'}</p>
         </div>
 
         {error && <div className="auth-error">{error}</div>}

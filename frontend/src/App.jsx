@@ -88,12 +88,14 @@ function AgentDashboard() {
       </header>
 
       <div className="app-layout">
-        <Sidebar user={user} onLogout={logout} />
+        <Sidebar user={user} onLogout={logout} onCommandClick={setPendingCommand} />
         <main className="chat-main">
           <ChatBox
             history={history}
             onSendMessage={handleSendMessage}
             isProcessing={isProcessing}
+            pendingCommand={pendingCommand}
+            onClearPending={() => setPendingCommand('')}
           />
         </main>
         <aside className="log-aside">

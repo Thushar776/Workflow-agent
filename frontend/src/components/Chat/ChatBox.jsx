@@ -1,11 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './ChatBox.css';
 
-export default function ChatBox({ history, onSendMessage, isProcessing }) {
+export default function ChatBox({ history, onSendMessage, isProcessing, pendingCommand, onClearPending }) {
   const [input, setInput] = useState('');
   const [file, setFile] = useState(null);
   const endRef = useRef(null);
   const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    if (pendingCommand) {
+      setInput(pendingCommand);
+      onClearPending();
+    }
+  }, [pendingCommand, onClearPending]);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' });

@@ -31,9 +31,9 @@ export default function RegisterPage({ onSwitch }) {
     <div className="auth-page">
       <div className="auth-container animate-fade-up">
         <div className="auth-header">
-          <div className="auth-logo">W</div>
-          <h1>Create Account</h1>
-          <p>Get started with Workflow Agent</p>
+          <div className="auth-logo">F</div>
+          <h1>Join FlowMind</h1>
+          <p>The intelligent way to automate workflows</p>
         </div>
 
         {error && <div className="auth-error">{error}</div>}
