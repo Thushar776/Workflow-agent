@@ -28,7 +28,7 @@ def decrypt_pii(encrypted_data: str) -> str:
     try:
         return cipher_suite.decrypt(encrypted_data.encode('utf-8')).decode('utf-8')
     except Exception:
-        return "Decryption Failed"
+        return ""
 
 def mask_email(email: str) -> str:
     """Masks email for frontend display (e.g. t****@example.com)"""

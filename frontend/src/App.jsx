@@ -12,6 +12,7 @@ function AgentDashboard() {
   const [history, setHistory] = useState([]);
   const [logs, setLogs] = useState([]);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [pendingCommand, setPendingCommand] = useState('');
 
   const handleSendMessage = async (message) => {
     const newUserMsg = { role: "user", parts: [{ text: message }] };

@@ -20,7 +20,7 @@ const COMMANDS = [
   "Clear chat history"
 ];
 
-export default function Sidebar({ user, onLogout }) {
+export default function Sidebar({ user, onLogout, onCommandClick }) {
   const userName = user?.full_name || 'Workflow User';
   const initial = userName.charAt(0).toUpperCase();
 
@@ -33,7 +33,6 @@ export default function Sidebar({ user, onLogout }) {
         </div>
         <div className="profile-info">
           <div className="profile-name">{userName}</div>
-          <div className="profile-role">Professional Plan</div>
         </div>
       </div>
 

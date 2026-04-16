@@ -38,6 +38,23 @@ export default function ChatBox({ history, onSendMessage, isProcessing, pendingC
     setFile(null);
   };
 
+  const renderMessage = (text) => {
+    if (!text) return null;
+    return text.split('\n').map((line, i) => {
+      // Basic detection for bullet points or numbered lists
+      const isListItem = line.match(/^(\d+\.|\*|-)\s/);
+      const content = line.split('**').map((part, j) => 
+        j % 2 === 1 ? <strong key={j}>{part}</strong> : part
+      );
+      
+      return (
+        <div key={i} className={isListItem ? 'list-item-line' : 'text-line'}>
+          {content}
+        </div>
+      );
+    });
+  };
+
   const empty = history.length === 0;
 
   return (
@@ -57,7 +74,7 @@ export default function ChatBox({ history, onSendMessage, isProcessing, pendingC
               return (
                 <div key={i} className="msg-row user-row animate-fade-up">
                   <div className="user-bubble">
-                    <p>{msg.parts[0].text}</p>
+                    <p>{renderMessage(msg.parts[0].text)}</p>
                   </div>
                 </div>
               );
@@ -67,7 +84,7 @@ export default function ChatBox({ history, onSendMessage, isProcessing, pendingC
                 <div key={i} className="msg-row bot-row animate-fade-up">
                   <div className="bot-card">
                     <div className="bot-surface">
-                      <p>{msg.parts[0].text}</p>
+                      {renderMessage(msg.parts[0].text)}
                     </div>
                     {/* Execution trace would go here if we had per-message logs */}
                   </div>

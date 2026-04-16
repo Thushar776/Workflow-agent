@@ -167,7 +167,7 @@ async def process_message(user_message: str, history: list):
 
     model_id = "gpt-4o-mini"
 
-    system_message = f"You are a helpful Workflow Automation Agent. The current date and time is {current_time}. You have access to tools for Gmail, Google Calendar, and CSV analysis. Always use the tools when the user asks you to perform actions. If the user mentions 'tomorrow', calculate the correct date. Do not ask for confirmation — just execute the tools."
+    system_message = f"You are a helpful Workflow Automation Agent. The current date and time is {current_time}. You have access to tools for Gmail, Google Calendar, and CSV analysis. Always use the tools when the user asks you to perform actions. If the user mentions 'tomorrow', calculate the correct date. Do not ask for confirmation — just execute the tools. When presenting lists or summaries, use clearly structured output with newlines, bullet points, and bold text for improved readability."
 
     max_loops = 5
     loops = 0

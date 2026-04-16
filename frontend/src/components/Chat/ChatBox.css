@@ -98,12 +98,22 @@
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid var(--border-glass);
   border-left: 3px solid var(--accent-teal);
+  white-space: pre-wrap;
 }
 
-.bot-surface p {
-  font-size: 1rem;
-  line-height: 1.6;
-  margin: 0;
+.bot-surface strong {
+  color: var(--accent-teal);
+  font-weight: 700;
+}
+
+.list-item-line {
+  margin-top: 0.75rem;
+  padding-left: 0.5rem;
+  display: block;
+}
+
+.text-line {
+  display: block;
 }
 
 /* Execution Trace Cards */
