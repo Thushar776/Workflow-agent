@@ -1,14 +1,21 @@
 import os
 from cryptography.fernet import Fernet
-from dotenv import load_dotenv
 
-load_dotenv()
+# Docker passes env vars via env_file in docker-compose.yml
+ENCRYPTION_KEY_RAW = os.environ.get("ENCRYPTION_KEY", "").strip()
 
-# In a real scenario, this should be a strong securely stored key via ENV.
-# For hackathon purposes, if not set, we generate a persistent one (but usually we provide a default)
-ENCRYPTION_KEY = os.environ.get("ENCRYPTION_KEY", Fernet.generate_key().decode())
+try:
+    if not ENCRYPTION_KEY_RAW:
+        raise ValueError("Missing Key")
+    # Test if it's a valid Fernet key
+    cipher_suite = Fernet(ENCRYPTION_KEY_RAW.encode())
+except Exception:
+    # Fallback to a stable generated key for the session if ENV is missing/malformed
+    # In production, this would be a security risk, but for hackathon stability it's a lifesaver.
+    NEW_KEY = Fernet.generate_key()
+    cipher_suite = Fernet(NEW_KEY)
+    print(f"--- WARNING: Using auto-generated key due to malformed ENV ---")
 
-cipher_suite = Fernet(ENCRYPTION_KEY.encode())
 
 def encrypt_pii(data: str) -> str:
     if not data:

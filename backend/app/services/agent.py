@@ -4,9 +4,9 @@ import time
 from dotenv import load_dotenv
 from openai import OpenAI
 
-from tools.csv_tool import analyze_csv
-from tools.gmail_tool import send_email, read_emails
-from tools.calendar_tool import schedule_event, get_upcoming_events
+from app.services.tools.csv_tool import analyze_csv
+from app.services.tools.gmail_tool import send_email, read_emails
+from app.services.tools.calendar_tool import schedule_event, get_upcoming_events
 
 load_dotenv()
 

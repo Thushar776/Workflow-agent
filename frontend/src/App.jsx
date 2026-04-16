@@ -19,7 +19,7 @@ function AgentDashboard() {
     setIsProcessing(true);
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/chat', {
+      const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -33,10 +33,9 @@ function AgentDashboard() {
       if (data.status === 'success') {
         const taskId = data.task_id;
         
-        // Polling loop
         const pollInterval = setInterval(async () => {
           try {
-            const statusRes = await fetch(`http://127.0.0.1:8000/api/chat/status/${taskId}`, {
+            const statusRes = await fetch(`/api/chat/status/${taskId}`, {
               headers: { 'Authorization': `Bearer ${token}` }
             });
             const statusData = await statusRes.json();
@@ -73,30 +72,50 @@ function AgentDashboard() {
   };
 
   return (
-    <div className="app-layout">
-      <Sidebar user={user} onLogout={logout} />
-      <main className="chat-main">
-        <ChatBox
-          history={history}
-          onSendMessage={handleSendMessage}
-          isProcessing={isProcessing}
-        />
-      </main>
-      <aside className="log-aside">
-        <ExecutionPanel logs={logs} />
-      </aside>
+    <div className="app-screen">
+      <header className="app-header">
+        <div className="header-left">
+          <div className="logo-mark">F</div>
+          <span className="brand-name">FlowMind</span>
+          <div className={`status-pill ${isProcessing ? 'thinking' : ''}`}>
+            <span className="status-dot"></span>
+            {isProcessing ? 'Thinking...' : 'Connected'}
+          </div>
+        </div>
+        <div className="header-right">
+          {/* Action icon placeholders could go here */}
+        </div>
+      </header>
+
+      <div className="app-layout">
+        <Sidebar user={user} onLogout={logout} />
+        <main className="chat-main">
+          <ChatBox
+            history={history}
+            onSendMessage={handleSendMessage}
+            isProcessing={isProcessing}
+          />
+        </main>
+        <aside className="log-aside">
+          <ExecutionPanel logs={logs} />
+        </aside>
+      </div>
     </div>
   );
 }
 
 function AppContent() {
   const { user, loading } = useAuth();
-  const [authView, setAuthView] = useState('login'); // 'login' | 'register'
+  const [authView, setAuthView] = useState('login');
 
   if (loading) {
     return (
       <div className="loading-screen">
-        <div className="loading-spinner"></div>
+        <div className="loading-logo"></div>
+        <div className="status-pill thinking">
+          <span className="status-dot"></span>
+          Initializing FlowMind...
+        </div>
       </div>
     );
   }

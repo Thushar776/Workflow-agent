@@ -37,22 +37,20 @@ export default function ChatBox({ history, onSendMessage, isProcessing }) {
     <div className="chat">
       <div className="chat-scroll">
         {empty ? (
-          <div className="chat-empty">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--border-light)" strokeWidth="1">
-              <rect x="3" y="11" width="18" height="10" rx="2"></rect><circle cx="12" cy="5" r="2"></circle><path d="M12 7v4"></path><line x1="8" y1="16" x2="8" y2="16"></line><line x1="16" y1="16" x2="16" y2="16"></line>
-            </svg>
-            <p>Start a new workflow</p>
+          <div className="chat-welcome animate-fade-up">
+            <div className="hero-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            </div>
+            <h1>FlowMind</h1>
+            <p>Intelligence at your fingertips. Automate your Gmail, Calendar, and CSV workflows with natural language.</p>
           </div>
         ) : (
           history.map((msg, i) => {
             if (msg.role === "user" && msg.parts[0]?.text) {
               return (
                 <div key={i} className="msg-row user-row animate-fade-up">
-                  <div className="user-msg-block">
+                  <div className="user-bubble">
                     <p>{msg.parts[0].text}</p>
-                    <button className="user-msg-close">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                    </button>
                   </div>
                 </div>
               );
@@ -60,16 +58,11 @@ export default function ChatBox({ history, onSendMessage, isProcessing }) {
             if (msg.role === "model" && msg.parts[0]?.text) {
               return (
                 <div key={i} className="msg-row bot-row animate-fade-up">
-                  <div className="bot-msg-container">
-                    <div className="bot-msg-header">
-                      <div className="bot-avatar">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2.5-9c.83 0 1.5-.67 1.5-1.5S10.33 8 9.5 8 8 8.67 8 9.5 8.83 11 9.5 11zm5 0c.83 0 1.5-.67 1.5-1.5S17.33 8 16.5 8 15 8.67 15 9.5s.67 1.5 1.5 1.5zm-2.5 4c-1.54 0-2.88-.74-3.7-1.89l1.45-1.45c.49.52 1.33.84 2.25.84s1.76-.32 2.25-.84l1.45 1.45c-.82 1.15-2.16 1.89-3.7 1.89z"/></svg>
-                      </div>
-                      <span className="bot-name">Workflow Agent</span>
-                    </div>
-                    <div className="bot-msg-body">
+                  <div className="bot-card">
+                    <div className="bot-surface">
                       <p>{msg.parts[0].text}</p>
                     </div>
+                    {/* Execution trace would go here if we had per-message logs */}
                   </div>
                 </div>
               );
@@ -79,16 +72,18 @@ export default function ChatBox({ history, onSendMessage, isProcessing }) {
         )}
         {isProcessing && (
           <div className="msg-row bot-row animate-fade-up">
-            <div className="bot-msg-container">
-              <div className="bot-msg-header">
-                <div className="bot-avatar">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2.5-9c.83 0 1.5-.67 1.5-1.5S10.33 8 9.5 8 8 8.67 8 9.5 8.83 11 9.5 11zm5 0c.83 0 1.5-.67 1.5-1.5S17.33 8 16.5 8 15 8.67 15 9.5s.67 1.5 1.5 1.5zm-2.5 4c-1.54 0-2.88-.74-3.7-1.89l1.45-1.45c.49.52 1.33.84 2.25.84s1.76-.32 2.25-.84l1.45 1.45c-.82 1.15-2.16 1.89-3.7 1.89z"/></svg>
-                </div>
-                <span className="bot-name">Workflow Agent</span>
-              </div>
-              <div className="bot-msg-body">
+            <div className="bot-card">
+              <div className="bot-surface">
                 <div className="typing-indicator">
                   <span className="dot"></span><span className="dot"></span><span className="dot"></span>
+                </div>
+              </div>
+              <div className="execution-trace">
+                <div className="trace-step">
+                  <div className="step-icon-box running">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                  </div>
+                  <span className="step-label">Thinking...</span>
                 </div>
               </div>
             </div>
@@ -99,42 +94,41 @@ export default function ChatBox({ history, onSendMessage, isProcessing }) {
 
       <div className="chat-input-area">
         {file && (
-          <div className="file-indicator">
+          <div className="file-indicator animate-fade-in">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
-            <span className="file-name">{file.name}</span>
-            <button className="file-remove" onClick={() => setFile(null)}>×</button>
+            <span className="file-name">Input: {file.name}</span>
+            <button type="button" className="file-remove" onClick={() => setFile(null)}>×</button>
           </div>
         )}
-        <form onSubmit={send} className="input-bar">
+        <form onSubmit={send} className="pill-input-container">
           <input
             type="file"
-            accept=".csv,.txt"
+            accept=".csv,.txt,.md,.json"
             style={{ display: 'none' }}
             ref={fileInputRef}
             onChange={handleFileChange}
           />
+          <button 
+            type="button" 
+            className="action-btn" 
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+          </button>
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Type a task..."
+            placeholder="Type a workflow task..."
             disabled={isProcessing}
             className="input-field"
           />
-          <div className="input-actions">
-            <button type="button" className="action-btn icon-plus"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
-            <button type="button" className="action-btn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg></button>
-            <button type="button" className="action-btn" onClick={() => fileInputRef.current?.click()}><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg></button>
-            <button type="submit" disabled={isProcessing || (!input.trim() && !file)} className="send-btn">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M2,21L23,12L2,3V10L17,12L2,14V21Z" /></svg>
-            </button>
-          </div>
+          <button type="submit" disabled={isProcessing || (!input.trim() && !file)} className="send-btn-circle">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M2,21L23,12L2,3V10L17,12L2,14V21Z" /></svg>
+          </button>
         </form>
-        <div className="input-meta">
-          <div className="meta-user">
-            <span className="meta-box"></span>
-            User
-          </div>
+        <div className="input-hint">
+          Press <strong>Enter</strong> to send · <strong>Shift+Enter</strong> for new line
         </div>
       </div>
     </div>

@@ -8,7 +8,8 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 
-from database import get_db, User
+from database.connection import get_db
+from app.models.user import User
 
 # --- Config ---
 SECRET_KEY = os.environ.get("JWT_SECRET", "hackathon-super-secret-key-2026")

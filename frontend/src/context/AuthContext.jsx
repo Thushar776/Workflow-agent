@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext(null);
 
-const API_BASE = 'http://127.0.0.1:8000';
+const API_BASE = ''; // Use proxy for production/docker
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);

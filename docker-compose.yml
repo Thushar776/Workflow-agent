@@ -1,0 +1,96 @@
+services:
+  # --- UI ---
+  frontend:
+    build: 
+      context: ./frontend
+    ports:
+      - "80:80"
+    networks:
+      - app_net
+    depends_on:
+      - backend
+
+  # --- API ---
+  backend:
+    build:
+      context: ./backend
+    env_file: .env
+    volumes:
+      - backend_logs:/app/logs
+      - backend_db:/app/database
+    networks:
+      - app_net
+    depends_on:
+      - redis
+
+  # --- Workers (Parallel processing) ---
+  worker-1:
+    build:
+      context: ./backend
+    command: ["python", "worker.py"]
+    env_file: .env
+    volumes:
+      - backend_db:/app/database
+    networks:
+      - app_net
+    depends_on:
+      - redis
+
+  worker-2:
+    build:
+      context: ./backend
+    command: ["python", "worker.py"]
+    env_file: .env
+    volumes:
+      - backend_db:/app/database
+    networks:
+      - app_net
+    depends_on:
+      - redis
+
+  # --- Broker ---
+  redis:
+    image: redis:7-alpine
+    networks:
+      - app_net
+
+  # --- Observability ---
+  loki:
+    image: grafana/loki:2.9.2
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - app_net
+
+  promtail:
+    image: grafana/promtail:2.9.2
+    volumes:
+      - backend_logs:/var/log/backend
+      - ./backend/promtail-config.yml:/etc/promtail/config.yml
+    command: -config.file=/etc/promtail/config.yml
+    networks:
+      - app_net
+    depends_on:
+      - loki
+
+  grafana:
+    image: grafana/grafana:10.2.2
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+    volumes:
+      - ./backend/grafana-datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
+    networks:
+      - app_net
+    depends_on:
+      - loki
+
+volumes:
+  backend_logs:
+  backend_db:
+
+networks:
+  app_net:
+    driver: bridge

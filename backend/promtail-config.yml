@@ -15,7 +15,7 @@ scrape_configs:
       - localhost
     labels:
       job: 'fastapi-backend'
-      __path__: /var/log/app.log
+      __path__: /var/log/backend/*.log
 
   pipeline_stages:
   - json:

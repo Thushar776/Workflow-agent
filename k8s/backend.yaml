@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: workflow-agent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: thushar/workflow-backend:latest # Placeholder
+        ports:
+        - containerPort: 8000
+        env:
+        - name: REDIS_URL
+          value: "redis://redis:6379/0"
+        - name: DATABASE_URL
+          value: "sqlite:///./database/workflow_agent.db"
+        - name: OPENAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: openai-api-key
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: workflow-agent
+spec:
+  selector:
+    app: backend
+  ports:
+  - protocol: TCP
+    port: 8000
+    targetPort: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker
+  namespace: workflow-agent
+spec:
+  replicas: 2 # Mandatory parallelisation
+  selector:
+    matchLabels:
+      app: worker
+  template:
+    metadata:
+      labels:
+        app: worker
+    spec:
+      containers:
+      - name: worker
+        image: thushar/workflow-backend:latest # Same image
+        command: ["python", "worker.py"]
+        env:
+        - name: REDIS_URL
+          value: "redis://redis:6379/0"
+        - name: DATABASE_URL
+          value: "sqlite:///./database/workflow_agent.db"
+        - name: OPENAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: openai-api-key
