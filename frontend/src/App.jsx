@@ -77,10 +77,6 @@ function AgentDashboard() {
         <div className="header-left">
           <div className="logo-mark">F</div>
           <span className="brand-name">FlowMind</span>
-          <div className={`status-pill ${isProcessing ? 'thinking' : ''}`}>
-            <span className="status-dot"></span>
-            {isProcessing ? 'Thinking...' : 'Connected'}
-          </div>
         </div>
         <div className="header-right">
           {/* Action icon placeholders could go here */}
